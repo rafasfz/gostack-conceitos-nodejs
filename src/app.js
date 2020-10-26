@@ -31,7 +31,26 @@ app.post('/repositories', (req, res) => {
 })
 
 app.put('/repositories/:id', (req, res) => {
-  // TODO
+  const { id } = req.params
+  const { title, url, techs } = req.body
+
+  const repositoryIndex = repositories.findIndex(
+    (repository) => repository.id == id
+  )
+
+  if (repositoryIndex < 0) {
+    res.status(400).send()
+  }
+
+  repositories[repositoryIndex] = {
+    id,
+    title,
+    url,
+    techs,
+    likes: repositories[repositoryIndex].likes,
+  }
+
+  return res.json(repositories[repositoryIndex])
 })
 
 app.delete('/repositories/:id', (req, res) => {
