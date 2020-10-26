@@ -11,7 +11,7 @@ app.use(cors())
 const repositories = []
 
 app.get('/repositories', (req, res) => {
-  res.json(repositories)
+  return res.json(repositories)
 })
 
 app.post('/repositories', (req, res) => {
@@ -39,7 +39,7 @@ app.put('/repositories/:id', (req, res) => {
   )
 
   if (repositoryIndex < 0) {
-    res.status(400).send()
+    return res.status(400).send()
   }
 
   repositories[repositoryIndex] = {
@@ -54,11 +54,35 @@ app.put('/repositories/:id', (req, res) => {
 })
 
 app.delete('/repositories/:id', (req, res) => {
-  // TODO
+  const { id } = req.params
+
+  const repositoryIndex = repositories.findIndex(
+    (repository) => repository.id == id
+  )
+
+  if (repositoryIndex < 0) {
+    return res.status(400).send()
+  }
+
+  repositories.splice(repositoryIndex, 1)
+
+  return res.status(204).send()
 })
 
 app.post('/repositories/:id/like', (req, res) => {
-  // TODO
+  const { id } = req.params
+
+  const repositoryIndex = repositories.findIndex(
+    (repository) => repository.id == id
+  )
+
+  if (repositoryIndex < 0) {
+    return res.status(400).send()
+  }
+
+  repositories[repositoryIndex].likes++
+
+  return res.json(repositories[repositoryIndex])
 })
 
 module.exports = app
